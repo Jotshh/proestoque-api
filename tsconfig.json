@@ -5,6 +5,7 @@
     "lib": ["ES2020", "dom"],
     "types": ["node"],
     "rootDir": "./src",          // Pasta raiz do código-fonte
+    "outDir": "./dist",          // Pasta de saída compilada
     "strict": true,              // Ativa todas as verificações de tipo
     "esModuleInterop": true,     // Compatibilidade de imports
     "skipLibCheck": true,

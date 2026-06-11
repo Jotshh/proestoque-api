@@ -9,7 +9,7 @@ export class ProdutoController {
   // /api/produtos?busca=cafe&categoriaId=cat_1&apenasAlerta=true
   async listar(req: Request, res: Response, next: NextFunction) {
     try {
-      const { busca, categoriaId, apenasAlerta } = req.query;
+      const { busca, categoriaId, apenasAlerta } = req.query as { busca?: string; categoriaId?: string; apenasAlerta?: string };
 
       const produtos = await prisma.produto.findMany({
         where: {
@@ -39,7 +39,7 @@ export class ProdutoController {
   // ── GET /api/produtos/:id ──────────────────────────────────
   async buscarPorId(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
+      const id = String(req.params.id) as string;
 
       const produto = await prisma.produto.findUnique({
         where: { id },
@@ -110,7 +110,7 @@ export class ProdutoController {
   // ── PUT /api/produtos/:id ──────────────────────────────────
   async atualizar(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
+      const id = String(req.params.id) as string;
       const {
         nome,
         categoriaId,
@@ -130,7 +130,7 @@ export class ProdutoController {
 
       // Se categoriaId foi enviado, verifica se existe
       if (categoriaId) {
-        const catExiste = await prisma.categoria.findUnique({ where: { id: categoriaId } });
+        const catExiste = await prisma.categoria.findUnique({ where: { id: categoriaId as string } });
         if (!catExiste) throw new AppError("Categoria não encontrada", 404);
       }
 
@@ -140,11 +140,11 @@ export class ProdutoController {
           // Spread + undefined: só atualiza campos que foram enviados
           // Se nome não veio no body, mantém o valor atual do banco
           ...(nome !== undefined      && { nome: String(nome).trim() }),
-          ...(categoriaId !== undefined && { categoriaId }),
+          ...(categoriaId !== undefined && { categoriaId: categoriaId as string }),
           ...(quantidade !== undefined  && { quantidade: Number(quantidade) }),
           ...(quantidadeMinima !== undefined && { quantidadeMinima: Number(quantidadeMinima) }),
           ...(preco !== undefined      && { preco: Number(preco) }),
-          ...(unidade !== undefined    && { unidade: String(unidade) }),
+          ...(unidade !== undefined    && { unidade: String(unidade) as string }),
           ...(observacao !== undefined && { observacao: observacao || null }),
           ...(foto !== undefined       && { foto: foto || null }),
           // @updatedAt no schema garante que atualizadoEm é atualizado automaticamente
@@ -162,7 +162,7 @@ export class ProdutoController {
   // ── DELETE /api/produtos/:id ───────────────────────────────
   async deletar(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = String(req.params.id);
+      const id = String(req.params.id) as string;
 
       // Verifica se existe antes de deletar
       const produtoExiste = await prisma.produto.findUnique({ where: { id } });
