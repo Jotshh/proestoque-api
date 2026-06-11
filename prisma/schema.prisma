@@ -1,7 +1,7 @@
 // O provider define qual banco usar. Troque por "postgresql" no deploy.
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL") // Lê do .env: "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // "postgresql://user:pass@host:5432/db"
 }
 
 generator client {
